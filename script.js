@@ -13,46 +13,53 @@ if (person == null || person == "") {
 }
 
 PubNub = new PubNub ({
-	publishKey : 'pub-c-000133bb-9b43-47e4-bf65-bd19559a8542', // Your Pub Key
-	subscribeKey : 'sub-c-55f4ee4c-2f26-11e7-9a1a-0619f8945a4f', // Your Sub Key
-	uuid: uuid
+  publishKey : 'pub-c-e6e2c68d-3b41-41f7-ad3c-840d2090830e',
+  subscribeKey : 'sub-c-69f8510c-3185-11e7-9967-02ee2ddab7fe',
+  uuid: uuid
 });
 
 PubNub.addListener({
-    status: function(statusEvent) {
-        console.log(statusEvent);
-    },
-    message: function(receivingMsg) {
-        console.log("Message: ", receivingMsg);
-		receivingMessage.innerHTML += '<div><span>'+receivingMsg.publisher+': </span><span class="message">'+receivingMsg.message.text+'</span><span class="timestamp">'+receivingMsg.timetoken+'</span></div>';
-		;
-    },
-    presence: function(presenceEvent) {
-		if(PubNub.getUUID() != presenceEvent.uuid && presenceEvent.state.isTyping)
-			typingStatus.innerHTML = presenceEvent.uuid+" is Typing";
-		else 
-			typingStatus.innerHTML = "";
-    }
-})
+  status: function(statusEvent) {
+    console.log(statusEvent);
+  },
+  message: function(receivingMsg) {
+    timestamp = receivingMsg.timetoken.slice(0, -4);
+
+    var date = new Date(1493982933779),
+        hours = date.getHours(),
+        minutes = "0" + date.getMinutes(),
+        seconds = "0" + date.getSeconds();
+
+    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);		
+
+    receivingMessage.innerHTML += '<div><span>'+receivingMsg.publisher+': </span><span class="message">'+receivingMsg.message.text+'</span><span class="timestamp">'+formattedTime+'</span></div>';
+  },
+  presence: function(presenceEvent) {
+    if(PubNub.getUUID() != presenceEvent.uuid && presenceEvent.state.isTyping)
+      typingStatus.innerHTML = presenceEvent.uuid+" is Typing";
+    else 
+      typingStatus.innerHTML = "";
+  }
+});
  
 PubNub.subscribe({ 
-    channels: ['test-typing'], // change channel name by your channel name
-	withPresence: true
+  channels: ['group-chat'],
+  withPresence: true
 });
 
 function sendMessage() {
-	var messageValue = document.getElementById("message");
-	if(!messageValue.value)
-		return;
+  var messageValue = document.getElementById("message");
+  if(!messageValue.value)
+    return;
 	
-	PubNub.publish(
-		{
-			message: {
-				text: messageValue.value
-			},
-			channel: 'test-typing', // change channel name by your channel name
-			sendByPost: false,
-			storeInHistory: false,
+  PubNub.publish(
+    {
+      message: {
+        text: messageValue.value
+      },
+      channel: 'group-chat',    
+      storeInHistory: true,
+      ttl: 24
 		},
 		function (status, response) {
 			if (status.error) {
@@ -68,11 +75,11 @@ function sendMessage() {
 			state: {
 				"isTyping": false
 			},
-			channels: ['test-typing'],
+			channels: ['group-chat'],
 		},
 		function (status, response) {
 			if (status.error) {
-				console.log(status)
+				console.log(status);
 			} else {
 				typingStatus.innerHTML = "";
 			}
@@ -88,7 +95,7 @@ function typeMessage() {
 			state: {
 				"isTyping": true
 			},
-			channels: ['test-typing'],
+			channels: ['group-chat'],
 		},
 		function (status, response) {
 			if (status.error) {
