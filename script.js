@@ -4,7 +4,11 @@ document.getElementById("message").addEventListener("keypress", typeMessage);
 var typingStatus = document.getElementById("typing-status"),
     receivingMessage = document.getElementById("receiving-messages"),
     uuid = "",
-    person = prompt("Please enter your name:", "");
+    person = prompt("Please enter your name:", ""),
+    
+    monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    historyDate = "",
+    historyMonth = "";
 
 document.addEventListener('DOMContentLoaded', function () {
     if (Notification.permission !== "granted")
@@ -18,26 +22,62 @@ if (person == null || person == "") {
 }
 
 PubNub = new PubNub ({
-  publishKey : 'pub-c-e6e2c68d-3b41-41f7-ad3c-840d2090830e',
-  subscribeKey : 'sub-c-69f8510c-3185-11e7-9967-02ee2ddab7fe',
+  publishKey : 'pub-c-8a0d91c5-986f-425c-a9b6-f9cceaaa79f8',
+  subscribeKey : 'sub-c-7a30f168-357d-11e7-887b-02ee2ddab7fe',
   uuid: uuid
 });
+
+PubNub.history(
+  {
+    channel: "groupChat"
+  },
+  function (status, response) {
+    receivingMessage.innerHTML = response.messages.map(function (m) {
+      var date = new Date(m.entry.timestamp),
+          originDate = date.getDate(),
+          originMonth = monthNames[date.getMonth()],
+          originYear = date.getFullYear(),
+          hours = date.getHours(),
+          minutes = "0" + date.getMinutes(),
+          seconds = "0" + date.getSeconds();
+
+      var dateSpan = "";
+      if(historyDate != originDate && historyMonth != originMonth) {
+        historyDate = originDate;
+        historyMonth = originMonth;
+        dateSpan = '<div class="datetime">' + originMonth + ' ' + originDate + ', ' + originYear + '</div>';
+      }
+      var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);		
+
+      var historyMessage = dateSpan + '<div><span>' + m.entry.uuid + '</span><span class="message">' + m.entry.text + '</span><span class="timestamp">' + formattedTime + '</span></div>';
+      return historyMessage; 
+    });
+  }
+);
 
 PubNub.addListener({
   status: function(statusEvent) {
     console.log(statusEvent);
   },
   message: function(receivingMsg) {
-    timestamp = receivingMsg.timetoken.slice(0, -4);
+    var date = new Date(receivingMsg.message.timestamp),
+          originDate = date.getDate(),
+          originMonth = monthNames[date.getMonth()],
+          originYear = date.getFullYear(),
+          hours = date.getHours(),
+          minutes = "0" + date.getMinutes(),
+          seconds = "0" + date.getSeconds();
 
-    var date = new Date(1493982933779),
-        hours = date.getHours(),
-        minutes = "0" + date.getMinutes(),
-        seconds = "0" + date.getSeconds();
+      var dateSpan = "";
+      if(historyDate != originDate && historyMonth != originMonth) {
+        historyDate = originDate;
+        historyMonth = originMonth;
+        dateSpan = '<div class="datetime">' + originMonth + ' ' + originDate + ', ' + originYear + '</div>';
+      }
 
     var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);		
 
-    receivingMessage.innerHTML += '<div><span>'+receivingMsg.publisher+': </span><span class="message">'+receivingMsg.message.text+'</span><span class="timestamp">'+formattedTime+'</span></div>';
+    receivingMessage.innerHTML += dateSpan + '<div><span>'+receivingMsg.publisher+': </span><span class="message">'+receivingMsg.message.text+'</span><span class="timestamp">'+formattedTime+'</span></div>';
 
     messageNotification(receivingMsg.publisher, receivingMsg.message.text);
   },
@@ -50,7 +90,7 @@ PubNub.addListener({
 });
  
 PubNub.subscribe({ 
-  channels: ['group-chat'],
+  channels: ['groupChat'],
   withPresence: true
 });
 
@@ -59,39 +99,32 @@ function sendMessage() {
   if(!messageValue.value)
     return;
 	
-  PubNub.publish(
-    {
-      message: {
-        text: messageValue.value
-      },
-      channel: 'group-chat',    
-      storeInHistory: true,
-      ttl: 24
-		},
-		function (status, response) {
-			if (status.error) {
-				console.log(status)
-			} else {
-				console.log("message Published w/ timetoken", response.timetoken)
-			}
-		}
-	);
+  PubNub.publish({
+    message: {
+      text: messageValue.value,
+      uuid: uuid,
+      timestamp: new Date().getTime()
+    },
+    channel: 'groupChat',    
+    storeInHistory: true,
+    ttl: 24
+  });
 
-	PubNub.setState(
-		{
-			state: {
-				"isTyping": false
-			},
-			channels: ['group-chat'],
-		},
+  PubNub.setState(
+    {
+      state: {
+        "isTyping": false
+      },
+      channels: ['groupChat'],
+    },
 		function (status, response) {
-			if (status.error) {
-				console.log(status);
-			} else {
-				typingStatus.innerHTML = "";
+      if (status.error) {
+        console.log(status);
+      } else {
+        typingStatus.innerHTML = "";
 			}
-		}
-	);
+    }
+  );
 
 	messageValue.value = "";
 }
@@ -102,7 +135,7 @@ function typeMessage() {
 			state: {
 				"isTyping": true
 			},
-			channels: ['group-chat'],
+			channels: ['groupChat'],
 		},
 		function (status, response) {
 			if (status.error) {
@@ -117,7 +150,7 @@ function messageNotification(sender, receivedMessage) {
       alert('Desktop notifications not available in your browser.'); 
       return;
   }
-  if (Notification.permission !== "granted"){
+  if (Notification.permission !== "granted") {
       Notification.requestPermission(function (permission) {
       if (permission === "granted") {
         var notification = new Notification(sender+' says', {
@@ -145,7 +178,7 @@ function messageNotification(sender, receivedMessage) {
     }
     
     notification.onclick = function () {
-      window.focus(window.location.href); 
+      window.focus(window.location.href);
       notification.close();
     };
   }
