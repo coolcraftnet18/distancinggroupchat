@@ -145,7 +145,7 @@ function messageNotification(sender, receivedMessage) {
     }
     
     notification.onclick = function () {
-      window.focus(window.location.href);
+      window.focus(window.location.href); 
       notification.close();
     };
   }
