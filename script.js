@@ -51,7 +51,7 @@ PubNub.history(
 
       var historyMessage = dateSpan + '<div><span>' + m.entry.uuid + '</span><span class="message">' + m.entry.text + '</span><span class="timestamp">' + formattedTime + '</span></div>';
       return historyMessage; 
-    });
+    }).join('');
   }
 );
 
