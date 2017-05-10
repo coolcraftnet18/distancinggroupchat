@@ -6,6 +6,11 @@ var typingStatus = document.getElementById("typing-status"),
     uuid = "",
     person = prompt("Please enter your name:", "");
 
+document.addEventListener('DOMContentLoaded', function () {
+    if (Notification.permission !== "granted")
+      Notification.requestPermission();
+});
+
 if (person == null || person == "") {
 	uuid = "random-generated-"+Math.floor(Math.random() * 100000);
 } else {
@@ -33,6 +38,8 @@ PubNub.addListener({
     var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);		
 
     receivingMessage.innerHTML += '<div><span>'+receivingMsg.publisher+': </span><span class="message">'+receivingMsg.message.text+'</span><span class="timestamp">'+formattedTime+'</span></div>';
+
+    messageNotification(receivingMsg.publisher, receivingMsg.message.text);
   },
   presence: function(presenceEvent) {
     if(PubNub.getUUID() != presenceEvent.uuid && presenceEvent.state.isTyping)
@@ -103,4 +110,43 @@ function typeMessage() {
 			}
 		}
 	);
+}
+
+function messageNotification(sender, receivedMessage) {
+  if (!Notification) {
+      alert('Desktop notifications not available in your browser.'); 
+      return;
+  }
+  if (Notification.permission !== "granted"){
+      Notification.requestPermission(function (permission) {
+      if (permission === "granted") {
+        var notification = new Notification(sender+' says', {
+          icon: 'https://www.pubnub.com/static/images/structure/favicon.png',
+          body: receivedMessage,
+        });
+        
+        notification.onshow = function() {  
+          setTimeout(function () {
+            notification.close()
+          }, 10000);
+        }
+      }
+    });
+  } else {
+    var notification = new Notification(sender+' says', {
+      icon: 'https://www.pubnub.com/static/images/structure/favicon.png',
+      body: receivedMessage,
+    });
+    
+    notification.onshow = function() { 
+      setTimeout(function () {
+        notification.close()
+      }, 10000);
+    }
+    
+    notification.onclick = function () {
+      window.focus(window.location.href);
+      notification.close();
+    };
+  }
 }
