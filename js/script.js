@@ -13,6 +13,7 @@ var channelName = "groupChat",
 	historyMonth = "",
 
 	userDetails = {},
+    pageProtocol = 'https',
 	cookieExpire = new Date().getFullYear() + 1;
 
 if (uuid != "") {
@@ -42,7 +43,11 @@ function getCookie(cookieName) {
     return "";
 }
 
-$.get("http://ipinfo.io", function (response) {
+
+if (window.location.protocol == 'http:')
+    pageProtocol = 'http';
+
+$.get(pageProtocol + "://ipinfo.io", function (response) {
 	userDetails.ip = response.ip;
 	userDetails.city = response.city;
 	userDetails.region = response.region;
