@@ -1,22 +1,27 @@
 <!DOCTYPE>
 <html>
 	<head>
-		<link type="text/css" rel="stylesheet" href="style.css" media="all" />
 		<title>Simple Group Chat</title>
+		<meta charset="UTF-8">
+		<meta name="description" content="Free Web tutorials">
+		<meta name="keywords" content="HTML, CSS, XML, JavaScript, PubNub, Chat, Group Chat">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="css/style.min.css" media="all" />		
 	</head>
 	<body>
 		<div class="page">
 			<h1>Simple Group Chat</h1>
 			<div id="main">
+				<div id="receiving-messages"></div>
 				<div id="chat">
 					<input type="text" id="message" placeholder="Type your message..." />
 					<div id="typing-status"></div>
 					<button id="send-message" type="submit">Send Message</button>
-				</div>
-				<div id="receiving-messages"></div>
+				</div>				
 			</div>
 		</div>
-		<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.12.0.min.js"></script>
-		<script src="script.js"></script>
+		<script src="js/pubnub.4.15.1.min.js"></script>
+		<script src="js/jquery.3.2.1.min.js"></script>
+		<script src="js/script.min.js"></script>
 	</body>
 </html>
