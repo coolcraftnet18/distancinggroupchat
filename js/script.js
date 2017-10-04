@@ -17,7 +17,7 @@ var channelName = "groupChat",
 	cookieExpire = new Date().getFullYear() + 1;
 
 if (uuid != "") {
-	alert("Welcome again " + username);
+	alert("Welcome again " + uuid);
 } else {
 	person = prompt("Please enter your name:", "");
 	if (person == null || person == "") {
