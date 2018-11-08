@@ -1,14 +1,14 @@
 {
   "name": "simple-group-chat",
   "version": "1.0.0",
-  "description": "https://github.com/samiahmedsiddiqui/simple-group-chat.",
+  "description": "Simple Group Chat Demo using PubNub JavaScript SDK.",
   "keywords": [
     "pubnub",
     "heroku",
     "HTML5",
     "JavaScript"
   ],
-  "homepage": "https://github.com/samiahmedsiddiqui/simple-group-chat"
+  "homepage": "https://github.com/samiahmedsiddiqui/simple-group-chat",
   "bugs": {
     "url" : "https://github.com/samiahmedsiddiqui/simple-group-chat/issues",
     "email" : "sami.siddiqui@yasglobal.com"
