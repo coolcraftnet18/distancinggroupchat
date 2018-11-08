@@ -15,5 +15,8 @@
   "author": "samiahmedsiddiqui",
   "website": "https://www.yasglobal.com/",
   "repository": "https://github.com/samiahmedsiddiqui/simple-group-chat",
-  "license": "MIT"
+  "license": "GPLv2",
+  "engines": {
+    "node": "10.x"
+  }
 }
