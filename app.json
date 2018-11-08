@@ -1,0 +1,19 @@
+{
+  "name": "Simple Group Chat",
+  "version": "1.0.0",
+  "description": "https://github.com/samiahmedsiddiqui/simple-group-chat.",
+  "main": "web.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pubnub",
+    "heroku",
+    "HTML5",
+    "JavaScript"
+  ],
+  "author": "Sami Ahmed Siddiqui",
+  "website": "https://www.yasglobal.com/",
+  "repository": "https://github.com/samiahmedsiddiqui/simple-group-chat",
+  "license": "MIT"
+}
