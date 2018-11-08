@@ -2,21 +2,32 @@
   "name": "simple-group-chat",
   "version": "1.0.0",
   "description": "https://github.com/samiahmedsiddiqui/simple-group-chat.",
-  "main": "index.html",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [
     "pubnub",
     "heroku",
     "HTML5",
     "JavaScript"
   ],
-  "author": "samiahmedsiddiqui",
-  "website": "https://www.yasglobal.com/",
-  "repository": "https://github.com/samiahmedsiddiqui/simple-group-chat",
-  "license": "GPLv2",
+  "homepage": "https://github.com/samiahmedsiddiqui/simple-group-chat"
+  "bugs": {
+    "url" : "https://github.com/samiahmedsiddiqui/simple-group-chat/issues",
+    "email" : "sami.siddiqui@yasglobal.com"
+  },
+  "license": "GPL-2.0-or-later ",
+  "author": {
+    "name": "Sami Ahmed Siddiqui",
+    "email": "sami.siddiqui@yasglobal.com",
+    "url": "https://www.yasglobal.com/"
+  },
+  "browser": "js/script.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samiahmedsiddiqui/simple-group-chat"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "engines": {
-    "node": "10.x"
+    "node": ">=0.8"
   }
 }
