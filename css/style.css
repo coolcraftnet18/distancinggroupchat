@@ -52,9 +52,6 @@ button {
 	height: 50%;
 	overflow: auto;
 }
-/*#chat {
-    position: relative;
-}*/
 #chat input {
     position: relative;
     width: 96%;
